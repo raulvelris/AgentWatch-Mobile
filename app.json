@@ -8,9 +8,12 @@
     "scheme": "agentwatchmobile",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.grupo3.agentwatch",
+      "supportsTablet": false
     },
     "android": {
+      "package": "com.grupo3.agentwatch",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

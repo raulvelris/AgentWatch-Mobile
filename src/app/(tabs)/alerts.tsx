@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator }
 import { Colors } from '../../theme/colors';
 import { useNotificationViewModel } from '../../viewmodels/NotificationViewModel';
 import { useRouter } from 'expo-router';
-import { AlertOctagon, AlertTriangle, Info, Check, EyeOff, Bell } from 'lucide-react-native';
+import { AlertOctagon, AlertTriangle, Info, Check, EyeOff, Bell, History } from 'lucide-react-native';
+
 
 export default function AlertsScreen() {
   const { notifications, isLoading, isNoDisturbActive, markAsRead } = useNotificationViewModel();
@@ -73,6 +74,15 @@ export default function AlertsScreen() {
           </Text>
         </View>
       )}
+
+      {/* RF24 CA-06: acceso rápido al historial completo de alertas */}
+      <TouchableOpacity
+        style={styles.historyBtn}
+        onPress={() => router.push('/(tabs)/alert-history')}
+      >
+        <History color={Colors.primaryLight} size={16} />
+        <Text style={styles.historyBtnText}>Ver historial completo (RF24)</Text>
+      </TouchableOpacity>
 
       {notifications.length === 0 ? (
         <View style={styles.emptyState}>
@@ -277,5 +287,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     marginLeft: 4,
+  },
+  historyBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginHorizontal: 0,
+    marginBottom: 8,
+    backgroundColor: 'rgba(56,189,248,0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(56,189,248,0.2)',
+    borderRadius: 10,
+  },
+  historyBtnText: {
+    color: Colors.primaryLight,
+    fontSize: 13,
+    fontWeight: '600',
   },
 });

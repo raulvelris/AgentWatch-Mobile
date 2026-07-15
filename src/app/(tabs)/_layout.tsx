@@ -2,7 +2,6 @@ import { Tabs } from 'expo-router';
 import { Colors } from '../../theme/colors';
 import { Home, Users, Bell, BarChart2, Settings, History } from 'lucide-react-native';
 
-
 export default function TabLayout() {
   return (
     <Tabs
@@ -18,6 +17,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: Colors.textMuted,
       }}
     >
+      {/* CA-01: exactamente 6 pantallas en la tab bar */}
       <Tabs.Screen
         name="index"
         options={{
@@ -47,20 +47,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="alert-history"
-        options={{
-          title: 'Historial',
-          tabBarIcon: ({ color }) => <History color={color} size={24} />,
-        }}
-      />
-      <Tabs.Screen
         name="settings"
         options={{
           title: 'Ajustes',
           tabBarIcon: ({ color }) => <Settings color={color} size={24} />,
         }}
       />
+      {/* alert-history: oculto de la tab bar, accesible vía botón en Alertas (RF24 CA-06) */}
+      <Tabs.Screen
+        name="alert-history"
+        options={{
+          href: null,
+          title: 'Historial de Alertas',
+          headerShown: true,
+        }}
+      />
     </Tabs>
   );
 }
-
