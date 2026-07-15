@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import { Colors } from '../../theme/colors';
-import { Home, Users, Bell, BarChart2, Settings } from 'lucide-react-native';
+import { Home, Users, Bell, BarChart2, Settings, History } from 'lucide-react-native';
+
 
 export default function TabLayout() {
   return (
@@ -46,6 +47,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="alert-history"
+        options={{
+          title: 'Historial',
+          tabBarIcon: ({ color }) => <History color={color} size={24} />,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Ajustes',
@@ -55,3 +63,4 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
