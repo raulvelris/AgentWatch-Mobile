@@ -6,6 +6,9 @@
  *
  * RF22 CA-02: Configura el listener de deep link para que tocar una
  * notificación CRITICAL navegue directamente al detalle del agente.
+ *
+ * RF23 CA-02/CA-03: Inicializa el SyncManager para detectar conectividad y
+ * arrancar el ciclo de delta sync + procesamiento de cola offline.
  */
 
 import { Stack, useRouter } from 'expo-router';
@@ -16,21 +19,34 @@ import {
   inicializarNotificaciones,
   configurarListenerDeepLink,
 } from '../services/NotificationService';
+import {
+  iniciarSyncManager,
+  detenerSyncManager,
+} from '../services/SyncManager';
 
 const queryClient = new QueryClient();
 
-function NotificationInitializer() {
+function AppInitializer() {
   const router = useRouter();
 
   useEffect(() => {
-    // CA-03: registrar token FCM al montar la app
+    // RF22 CA-03: registrar token FCM al montar la app
     inicializarNotificaciones().catch((err) =>
       console.error('[Layout] Error al inicializar notificaciones:', err)
     );
 
-    // CA-02: activar listener para deep links desde notificaciones CRITICAL
-    const removeListener = configurarListenerDeepLink(router);
-    return removeListener;
+    // RF22 CA-02: activar listener para deep links desde notificaciones CRITICAL
+    const removeNotifListener = configurarListenerDeepLink(router);
+
+    // RF23 CA-02/CA-03: arrancar sync manager (detecta red + delta sync)
+    iniciarSyncManager().catch((err) =>
+      console.error('[Layout] Error al iniciar SyncManager:', err)
+    );
+
+    return () => {
+      removeNotifListener();
+      detenerSyncManager();  // RF23: limpiar timers al desmontar
+    };
   }, [router]);
 
   return null;
@@ -40,7 +56,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <StatusBar style="light" />
-      <NotificationInitializer />
+      <AppInitializer />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#020617' } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
@@ -50,3 +66,4 @@ export default function RootLayout() {
     </QueryClientProvider>
   );
 }
+
